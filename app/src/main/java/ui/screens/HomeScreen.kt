@@ -58,6 +58,8 @@ import com.example.appetiveexplorer.ui.viewmodel.CarritoViewModel
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
 import com.example.appetiveexplorer.ui.screens.ConfirmarPedidoScreen
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 
 
 
@@ -617,32 +619,34 @@ fun HomeScreen(
                 SearchBar(
                     texto = textoBusqueda,
 
-                    onTextoChange = {
-                        textoBusqueda = it
+                    onTextoChange = { nuevoTexto ->
+                        textoBusqueda = nuevoTexto
+
+                        // Restablecer categoría al utilizar el buscador
+                        if (nuevoTexto.isNotBlank()) {
+                            categoriaSeleccionada = "Todos"
+                        }
                     }
                 )
             }
 
-            // CATEGORÍAS
+
+// CATEGORÍAS
             item(
                 span = {
                     GridItemSpan(maxLineSpan)
                 }
             ) {
-
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-
-                    horizontalArrangement =
-                        Arrangement.spacedBy(8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-
                     CategoriaChip(
                         texto = "Todos",
-
-                        seleccionada =
-                            categoriaSeleccionada == "Todos",
-
+                        seleccionada = categoriaSeleccionada == "Todos",
                         onClick = {
                             categoriaSeleccionada = "Todos"
                         }
@@ -650,10 +654,7 @@ fun HomeScreen(
 
                     CategoriaChip(
                         texto = "Bebidas",
-
-                        seleccionada =
-                            categoriaSeleccionada == "Bebidas",
-
+                        seleccionada = categoriaSeleccionada == "Bebidas",
                         onClick = {
                             categoriaSeleccionada = "Bebidas"
                         }
@@ -661,10 +662,7 @@ fun HomeScreen(
 
                     CategoriaChip(
                         texto = "Harinas",
-
-                        seleccionada =
-                            categoriaSeleccionada == "Harinas",
-
+                        seleccionada = categoriaSeleccionada == "Harinas",
                         onClick = {
                             categoriaSeleccionada = "Harinas"
                         }
@@ -672,16 +670,14 @@ fun HomeScreen(
 
                     CategoriaChip(
                         texto = "Dulces",
-
-                        seleccionada =
-                            categoriaSeleccionada == "Dulces",
-
+                        seleccionada = categoriaSeleccionada == "Dulces",
                         onClick = {
                             categoriaSeleccionada = "Dulces"
                         }
                     )
                 }
             }
+
 
             // PRODUCTOS
             items(productos) { producto ->

@@ -5,10 +5,11 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
+import androidx.compose.runtime.mutableStateListOf
 import com.example.appetiveexplorer.data.model.Carrito
 import com.example.appetiveexplorer.data.model.Producto
-import androidx.compose.runtime.mutableStateListOf
 import com.example.appetiveexplorer.data.model.Pedido
+
 class CarritoViewModel : ViewModel() {
 
     // Cada cafetería mantiene su propia lista de productos.
@@ -115,9 +116,16 @@ class CarritoViewModel : ViewModel() {
         }
     }
 
+    // LISTA DE PEDIDOS REGISTRADOS
     private val pedidos = mutableStateListOf<Pedido>()
 
-    fun registrarPedido(cafeteriaId: Int): Pedido? {
+    // REGISTRAR PEDIDO
+    fun registrarPedido(
+        cafeteriaId: Int,
+        metodoPago: String,
+        metodoConsumo: String
+    ): Pedido? {
+
         val itemsDelCarrito = obtenerItems(cafeteriaId)
 
         if (itemsDelCarrito.isEmpty()) {
@@ -129,7 +137,9 @@ class CarritoViewModel : ViewModel() {
             cafeteriaId = cafeteriaId,
             fechaMillis = System.currentTimeMillis(),
             items = itemsDelCarrito.toList(),
-            total = itemsDelCarrito.sumOf { it.subtotal }
+            total = itemsDelCarrito.sumOf { it.subtotal },
+            metodoPago = metodoPago,
+            metodoConsumo = metodoConsumo
         )
 
         pedidos.add(nuevoPedido)
@@ -141,5 +151,4 @@ class CarritoViewModel : ViewModel() {
     fun obtenerPedidos(): List<Pedido> {
         return pedidos.toList()
     }
-
 }
